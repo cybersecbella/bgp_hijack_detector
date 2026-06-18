@@ -11,7 +11,6 @@ Feed it a PCAP file and get back:
 - **C2 beaconing detection** — statistical analysis of packet timing (low CV = malware)
 - **DNS exfiltration alerts** — high-entropy subdomains flagged with Shannon entropy score
 - **AI threat narrative** — Claude explains every finding in plain English
-- **TheHive cases** — CRITICAL and HIGH findings exported automatically
 
 ---
 
@@ -19,7 +18,7 @@ Feed it a PCAP file and get back:
 
 ### 1. Clone and install
 ```bash
-git clone https://github.com/YOUR_USERNAME/scapy
+git clone https://github.com/cybersecbella/scapy
 cd scapy
 pip install -r requirements_ai.txt
 ```
@@ -34,10 +33,23 @@ echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
 python -m ai_pcap_analyst analyze suspicious.pcap
 ```
 
-### 4. Export to TheHive (optional)
-```bash
-python -m ai_pcap_analyst analyze suspicious.pcap --thehive
+### 4. dns_exfil -  returns potential data exfiltration attempts masquerading as legitimate DNS queries
 ```
+python ai_pcap_analyst/dns_exfil.py tests/sample_pcaps/dns_test.pcap
+```
+
+### 5. beaconing.py - looks for periodic communication patterns and suspicious port usage within network traffic
+```
+python ai_pcap_analyst/beaconing.py tests/sample_pcaps/monitoring_beaconing.pcap
+```
+
+### 6. bgp_hijack.py - returns the prefix and ASN; checks validation status 
+```
+python ai_pcap_analyst/bgp_hijack.py tests/sample_pcaps/pakistan_telecom_bgp_hijack.pcap
+```
+
+
+
 
 ---
 
@@ -50,7 +62,6 @@ python -m ai_pcap_analyst analyze suspicious.pcap --thehive
 | `bgp_hijack.py` | RPKI validation via RIPE NCC API | T1599, T1205 |
 | `aggregator.py` | Combines findings + risk scoring | — |
 | `langchain_agent.py` | Claude AI threat narrative | — |
-| `thehive_export.py` | TheHive case creation | — |
 
 ---
 
@@ -90,7 +101,6 @@ redirect traffic. Detected by validating each announcement against RPKI
 
 - Python 3.9+
 - Anthropic API key ([get one here](https://console.anthropic.com))
-- TheHive 5.x (optional — for case export only)
 - Wireshark / tshark (for pyshark live capture)
 
 ---
@@ -123,8 +133,6 @@ scapy/
 │   ├── aggregator.py        # finding aggregator + risk scoring
 
 │   ├── langchain_agent.py   # LangChain AI threat narrative agent
-
-│   └── thehive_export.py    # TheHive API case exporter
 
 ├── tests/
 

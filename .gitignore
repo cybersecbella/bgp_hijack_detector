@@ -24,3 +24,9 @@ tests/sample_pcaps/
 *.cap
 __pycache__/
 *.pyc
+tests/sample_pcaps/
+*.pcap
+*.pcapng
+*.cap
+*.pcap.zip
+tests/test_report.json
